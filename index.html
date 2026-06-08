@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChronoGlass | Precision Digital Clock & Tools Suite</title>
+  <meta name="description" content="A premium, glassmorphic digital and analog clock website featuring timezone detection, world clocks, customizable alarms, precise stopwatch, and a countdown timer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header glass-panel">
+      <div class="logo-area">
+        <h1>ChronoGlass</h1>
+      </div>
+      <div class="header-controls">
+        <!-- Theme Selector -->
+        <button id="theme-toggle" class="control-btn" title="Toggle Theme (T)" aria-label="Toggle Light/Dark Theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+
+        <!-- Analog/Digital Toggle -->
+        <button id="view-toggle" class="control-btn" title="Toggle Clock View (V)" aria-label="Toggle Digital/Analog View">
+          <svg class="analog-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <svg class="digital-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><path d="M12 12h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></svg>
+        </button>
+
+        <!-- Format Toggle -->
+        <button id="format-toggle" class="control-btn txt-btn" title="Toggle 12/24 Hour format" aria-label="Toggle 12/24 Hour Format">
+          12H
+        </button>
+
+        <!-- Color Theme Presets -->
+        <div class="color-presets-wrapper">
+          <button class="control-btn" id="color-picker-trigger" title="Customize Color Theme" aria-label="Customize Color Theme">
+            <span class="color-indicator"></span>
+          </button>
+          <div class="color-dropdown glass-panel" id="color-dropdown-menu">
+            <button class="color-preset active" data-color="cyan" style="background-color: var(--cyan-glow);"></button>
+            <button class="color-preset" data-color="emerald" style="background-color: var(--emerald-glow);"></button>
+            <button class="color-preset" data-color="rose" style="background-color: var(--rose-glow);"></button>
+            <button class="color-preset" data-color="gold" style="background-color: var(--gold-glow);"></button>
+            <button class="color-preset" data-color="violet" style="background-color: var(--violet-glow);"></button>
+          </div>
+        </div>
+
+        <!-- Fullscreen Button -->
+        <button id="fullscreen-toggle" class="control-btn" title="Toggle Fullscreen Mode (F)" aria-label="Toggle Fullscreen Mode">
+          <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          <svg class="shrink-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      
+      <!-- Primary Hero Panel: The Clock -->
+      <section id="hero-clock-panel" class="hero-panel glass-panel">
+        <div class="clock-display-wrapper">
+          
+          <!-- Digital View -->
+          <div id="digital-clock-view" class="digital-view active">
+            <div class="digital-time-container">
+              <span id="clock-hours" class="time-digit">12</span>
+              <span class="time-colon">:</span>
+              <span id="clock-minutes" class="time-digit">00</span>
+              <span class="time-colon">:</span>
+              <span id="clock-seconds" class="time-digit">00</span>
+              <span id="clock-ampm" class="ampm-indicator">PM</span>
+            </div>
+          </div>
+
+          <!-- Analog View -->
+          <div id="analog-clock-view" class="analog-view">
+            <div class="analog-clock-face">
+              <div class="clock-dot"></div>
+              <div class="hand hour-hand" id="analog-hour"></div>
+              <div class="hand minute-hand" id="analog-minute"></div>
+              <div class="hand second-hand" id="analog-second"></div>
+              
+              <!-- Clock markers -->
+              <div class="marker hour-12">12</div>
+              <div class="marker hour-3">3</div>
+              <div class="marker hour-6">6</div>
+              <div class="marker hour-9">9</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="clock-meta">
+          <div id="date-display" class="date-display">Monday, 8 June 2026</div>
+          
+          <!-- Timezone Selection / Info -->
+          <div class="timezone-picker-container">
+            <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>
+            <select id="timezone-select" class="glass-select" aria-label="Select Timezone">
+              <!-- JS will populate options, but let's hardcode local and UTC plus others -->
+              <option value="local">Local Time (Detecting...)</option>
+              <option value="UTC">UTC / GMT</option>
+            </select>
+            <span id="timezone-offset" class="tz-offset-label">UTC +05:30</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar Tabs Control -->
+      <nav class="tool-navigation glass-panel">
+        <button class="nav-tab-btn active" data-tab="alarms" id="tab-alarms">
+          <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Alarms</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="stopwatch" id="tab-stopwatch">
+          <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Stopwatch</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="timer" id="tab-timer">
+          <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9.09 9 1-1h4l1 1M9.09 15l1 1h4l1-1"/></svg>
+          <span>Timer</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="world" id="tab-world">
+          <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>
+          <span>World Clocks</span>
+        </button>
+      </nav>
+
+      <!-- Dynamic Tab Container -->
+      <section id="dynamic-tabs-container" class="tabs-display-panel">
+        
+        <!-- Alarms Content -->
+        <div id="panel-alarms" class="tab-content-panel active glass-panel">
+          <div class="panel-header">
+            <h2>Alarms Manager</h2>
+            <p class="panel-subtitle">Set multiple local reminders with elegant tones</p>
+          </div>
+          
+          <div class="alarms-flex-container">
+            <form id="alarm-form" class="alarm-setter-form">
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="alarm-time">Time</label>
+                  <input type="time" id="alarm-time" required class="glass-input">
+                </div>
+                <div class="input-group">
+                  <label for="alarm-label">Label</label>
+                  <input type="text" id="alarm-label" placeholder="Wake Up!" class="glass-input" maxlength="20">
+                </div>
+              </div>
+              <button type="submit" id="add-alarm-btn" class="glass-btn primary-btn">Add Alarm</button>
+            </form>
+
+            <div class="alarm-list-container">
+              <h3>Active Alarms</h3>
+              <div id="alarms-list" class="alarms-list-scroll">
+                <!-- Javascript will inject list here -->
+                <div class="empty-state">No alarms scheduled yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stopwatch Content -->
+        <div id="panel-stopwatch" class="tab-content-panel glass-panel">
+          <div class="panel-header">
+            <h2>Stopwatch</h2>
+            <p class="panel-subtitle">Precise millisecond event timing</p>
+          </div>
+
+          <div class="stopwatch-display-container">
+            <div id="stopwatch-time" class="mono-display">00:00:00<span class="ms-part">.000</span></div>
+          </div>
+
+          <div class="stopwatch-controls">
+            <button id="stopwatch-start" class="glass-btn primary-btn">Start</button>
+            <button id="stopwatch-lap" class="glass-btn" disabled>Lap</button>
+            <button id="stopwatch-reset" class="glass-btn">Reset</button>
+          </div>
+
+          <div class="lap-history-container">
+            <h3>Lap Times</h3>
+            <div class="lap-table-wrapper">
+              <table id="lap-table" class="lap-table">
+                <thead>
+                  <tr>
+                    <th>Lap #</th>
+                    <th>Lap Time</th>
+                    <th>Cumulative Time</th>
+                  </tr>
+                </thead>
+                <tbody id="lap-list-body">
+                  <!-- Laps will be injected here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Content -->
+        <div id="panel-timer" class="tab-content-panel glass-panel">
+          <div class="panel-header">
+            <h2>Countdown Timer</h2>
+            <p class="panel-subtitle">Set hours, minutes, and seconds</p>
+          </div>
+
+          <div class="timer-setup-wrapper">
+            <div class="timer-selector-container">
+              <div class="picker-group">
+                <input type="number" id="timer-hours" min="0" max="23" value="00" class="glass-number-input">
+                <span>Hours</span>
+              </div>
+              <div class="picker-group">
+                <input type="number" id="timer-minutes" min="0" max="59" value="05" class="glass-number-input">
+                <span>Min</span>
+              </div>
+              <div class="picker-group">
+                <input type="number" id="timer-seconds" min="0" max="59" value="00" class="glass-number-input">
+                <span>Sec</span>
+              </div>
+            </div>
+
+            <div class="timer-running-display-wrapper" style="display: none;">
+              <div id="timer-running-display" class="mono-display">00:05:00</div>
+              <div class="timer-progress-bar-container">
+                <div id="timer-progress-fill" class="timer-progress-fill"></div>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button id="timer-start" class="glass-btn primary-btn">Start</button>
+              <button id="timer-pause" class="glass-btn" style="display: none;">Pause</button>
+              <button id="timer-reset" class="glass-btn" disabled>Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- World Clocks Content -->
+        <div id="panel-world" class="tab-content-panel glass-panel">
+          <div class="panel-header">
+            <h2>World Clocks</h2>
+            <p class="panel-subtitle">Realtime updates across global hubs</p>
+          </div>
+
+          <div class="world-clocks-grid">
+            
+            <div class="world-clock-card glass-panel" data-timezone="America/New_York">
+              <div class="world-card-header">
+                <h3>New York</h3>
+                <span class="world-offset">UTC-4</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+            <div class="world-clock-card glass-panel" data-timezone="Europe/London">
+              <div class="world-card-header">
+                <h3>London</h3>
+                <span class="world-offset">UTC+1</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+            <div class="world-clock-card glass-panel" data-timezone="Asia/Dubai">
+              <div class="world-card-header">
+                <h3>Dubai</h3>
+                <span class="world-offset">UTC+4</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+            <div class="world-clock-card glass-panel" data-timezone="Asia/Tokyo">
+              <div class="world-card-header">
+                <h3>Tokyo</h3>
+                <span class="world-offset">UTC+9</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+            <div class="world-clock-card glass-panel" data-timezone="Australia/Sydney">
+              <div class="world-card-header">
+                <h3>Sydney</h3>
+                <span class="world-offset">UTC+10</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+            <div class="world-clock-card glass-panel" data-timezone="Asia/Kolkata">
+              <div class="world-card-header">
+                <h3>New Delhi</h3>
+                <span class="world-offset">UTC+5:30</span>
+              </div>
+              <div class="world-time mono-display">00:00:00</div>
+              <div class="world-date">Monday, Jun 8</div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer / Guide -->
+    <footer class="app-footer glass-panel">
+      <div class="footer-info">
+        <span>Press <kbd>H</kbd> for Help & Shortcuts</span>
+      </div>
+      <div class="footer-copyright">
+        <span>© 2026 ChronoGlass</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Help & Shortcuts Modal Overlay -->
+  <div id="help-modal" class="modal-overlay">
+    <div class="modal-content glass-panel">
+      <h2>Keyboard Shortcuts & Info</h2>
+      <div class="modal-body">
+        <ul class="shortcuts-list">
+          <li><kbd>F</kbd> - Toggle Fullscreen Clock</li>
+          <li><kbd>V</kbd> - Toggle View (Digital / Analog)</li>
+          <li><kbd>T</kbd> - Toggle Theme (Dark / Light)</li>
+          <li><kbd>C</kbd> - Toggle Color Palette Dropdown</li>
+          <li><kbd>Space</kbd> - Start/Pause Stopwatch</li>
+          <li><kbd>L</kbd> - Record Stopwatch Lap</li>
+          <li><kbd>R</kbd> - Reset Stopwatch / Timer</li>
+          <li><kbd>H</kbd> - Show/Hide Help Menu</li>
+          <li><kbd>Esc</kbd> - Close Help Menu / Fullscreen</li>
+        </ul>
+        <p class="modal-tip"><strong>Tip:</strong> Interaction activates sound. If timers or alarms don't beep, click anywhere on the page to unmute.</p>
+      </div>
+      <button id="close-modal-btn" class="glass-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Alarm Ringing Overlay -->
+  <div id="alarm-trigger-overlay" class="modal-overlay alarm-overlay">
+    <div class="modal-content glass-panel alarm-alert-box">
+      <div class="alarm-bell-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ringing-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9m7.73 13a3 3 0 0 1-5.46 0"/></svg>
+      </div>
+      <h2 id="alarm-trigger-title">ALARM ACTIVE!</h2>
+      <p id="alarm-trigger-label">Label: Alarm</p>
+      <button id="dismiss-alarm-btn" class="glass-btn primary-btn alarm-dismiss-btn">Dismiss Alarm</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
